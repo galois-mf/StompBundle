@@ -36,7 +36,7 @@ class ConsumerCommand extends Command implements ContainerAwareInterface
 
         $messages = 0;
         $this->subscription = $this->getSubscription($input->getArgument('name'));
-        $this->registerSignalHandler();
+        $signalHandler = $this->registerSignalHandler();
         foreach ($this->subscription->consume() as $unit) {
             if (null !== $unit) {
                 ++$messages;
@@ -48,6 +48,10 @@ class ConsumerCommand extends Command implements ContainerAwareInterface
                 }
             } elseif ($output->isVeryVerbose()) {
                 $output->writeln('No message available');
+            }
+
+            if ($signalHandler) {
+                pcntl_signal_dispatch();
             }
         }
 
@@ -65,12 +69,14 @@ class ConsumerCommand extends Command implements ContainerAwareInterface
         return $subscription;
     }
 
-    private function registerSignalHandler(): void
+    private function registerSignalHandler(): bool
     {
         if (extension_loaded('pcntl') && function_exists('pcntl_signal')) {
-            pcntl_signal(SIGTERM, [&$this, 'stopSubscription']);
-            pcntl_signal(SIGINT, [&$this, 'stopSubscription']);
+            pcntl_signal(SIGTERM, [$this, 'stopSubscription']);
+            pcntl_signal(SIGINT, [$this, 'stopSubscription']);
+            return true;
         }
+        return false;
     }
 
     protected function configure()
