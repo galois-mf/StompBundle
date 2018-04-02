@@ -1,0 +1,16 @@
+stomp_php_stomp:
+  clients:
+     default:
+        broker_uri: 'tcp://localhost:61614'
+        public: false
+  consumers:
+     welcome:
+        client: 'default'
+        queue: '/welcome'
+        service: StompPhp\StompBundle\Tests\DependencyInjection\Mock\MockCallable
+     welcome_with_method:
+        client: 'default'
+        queue: '/welcome'
+        service: StompPhp\StompBundle\Tests\DependencyInjection\Mock\MockCallable
+        service_method: 'onMessage'
+        selector: "switch = 'green'"

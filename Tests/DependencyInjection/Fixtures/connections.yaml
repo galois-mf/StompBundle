@@ -1,0 +1,20 @@
+stomp_php_stomp:
+  clients:
+     default:
+        broker_uri: 'tcp://localhost:61614'
+        public: true
+     example_broker:
+        host: '127.0.0.1'
+        port: 61612
+        vhost: '/someVhost'
+        heartbeat_client_ms: 250
+        heartbeat_server_ms: 250
+        read_timeout_ms: 750
+        write_timeout: 3
+        public: true
+     simple_broker:
+        broker_uri: 'failover://(tcp://localhost:61614,ssl://localhost:61612)?randomize=true'
+        vhost: '/someVhost'
+        user: 'username'
+        password: '123456'
+        public: true

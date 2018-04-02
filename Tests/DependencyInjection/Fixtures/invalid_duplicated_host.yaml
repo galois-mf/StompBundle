@@ -1,0 +1,7 @@
+stomp_php_stomp:
+  clients:
+     default:
+        broker_uri: 'tcp://localhost:61614'
+        host: '127.0.0.1'
+        port: 61614
+        public: true
