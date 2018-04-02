@@ -9,6 +9,9 @@ This bundle provides [stomp-php](https://github.com/stomp-php/stomp-php) integra
 composer require stomp-php/stomp-bundle 
 ```
 
+- For Symfony 3.4 you need to register the bundle by adding `new StompPhp\StompBundle\StompPhpStompBundle()` to your `AppKernel.php`.
+- For Symfony 4.0 you need to register the command by adding `StompPhp\StompBundle\Command\ConsumerCommand:` to your `services.yaml`. 
+
 Create a service that is `callable`.
 
 ```php
@@ -24,13 +27,16 @@ class YourService {
 }
 ``` 
 
-Define stomp clients and consumers (subscribtions).
+Define stomp clients and consumers (subscriptions).
 
 ```yaml
 stomp_php_stomp:
   clients:
      default:
         broker_uri: 'tcp://localhost:61614'
+        # default read timeout is one minute, which makes interactive stop requests very slow.
+        read_timeout_ms: 750
+        
   consumers:
      welcome:
         client: 'default'
