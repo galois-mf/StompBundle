@@ -17,9 +17,14 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $tree = new TreeBuilder();
+        $tree = new TreeBuilder('stomp_php_stomp');
 
-        $root = $tree->root('stomp_php_stomp');
+        if (method_exists($tree, 'getRootNode')) {
+            $root = $tree->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $root = $tree->root('stomp_php_stomp');
+        }
 
         $this->addConnections($root);
         $this->addConsumers($root);
