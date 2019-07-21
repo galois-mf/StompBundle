@@ -19,7 +19,7 @@ class StompPhpStompExtensionTest extends TestCase
 {
     public function testConnectionConfigHandling()
     {
-        $clients = ['default', 'example_broker', 'simple_broker'];
+        $clients = ['default', 'example_broker', 'simple_broker', 'broker_with_context'];
         $container = $this->getContainer('connections.yaml');
         foreach ($clients as $client) {
             $id = sprintf('stomp.clients.%s', $client);
@@ -37,6 +37,22 @@ class StompPhpStompExtensionTest extends TestCase
         self::assertNotSame($clientA, $clientB);
     }
 
+    public function testClientGetSslContext()
+    {
+        $container = $this->getContainer('connections.yaml');
+        $stateful = $container->get('stomp.clients.broker_with_context');
+        $connection = $stateful->getClient()->getConnection();
+        $context = [
+            'ssl' => [
+                'local_cert' => 'cert.pem',
+                'local_pk' => 'key.pem',
+                'passphrase' => 'test',
+                'cafile' => 'cert.ca',
+            ]
+        ];
+        self::assertAttributeEquals($context, 'context', $connection);
+
+    }
     /**
      * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
      * @expectedExceptionMessage Invalid configuration for path "stomp_php_stomp.clients.default": You can only define "broker_uri" or "host" and "port".

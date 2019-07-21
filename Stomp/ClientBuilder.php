@@ -57,6 +57,11 @@ class ClientBuilder
      */
     private $brokerUri;
 
+    /*
+     * @var array
+     */
+    private $context = [];
+
     /**
      * Sets options for this builder.
      *
@@ -64,6 +69,7 @@ class ClientBuilder
      */
     public function setOptions(array $options): void
     {
+
         $keys = array_keys(get_object_vars($this));
         foreach ($options as $k => $v) {
             $k = preg_replace_callback(
@@ -110,7 +116,7 @@ class ClientBuilder
      */
     private function getConnection(): Connection
     {
-        $connection = new Connection($this->getConnectionString(), $this->getConnectTimeout());
+        $connection = new Connection($this->getConnectionString(), $this->getConnectTimeout(), $this->context);
         if ($this->writeTimeout) {
             $connection->setWriteTimeout($this->writeTimeout);
         }

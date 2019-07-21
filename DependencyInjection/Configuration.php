@@ -44,7 +44,7 @@ class Configuration implements ConfigurationInterface
                                 function (array $config) {
                                     return $config['broker_uri'] && ($config['host'] || $config['port']);
                                 }
-                             )
+                            )
                              ->thenInvalid('You can only define "broker_uri" or "host" and "port".')
                         ->end()
                         ->validate()
@@ -52,7 +52,7 @@ class Configuration implements ConfigurationInterface
                                 function (array $config) {
                                     return !$config['broker_uri'] && (!$config['host'] || !$config['port']);
                                 }
-                             )
+                            )
                              ->thenInvalid('No host configured, you need to define "host" and "port" or "broker_uri".')
                         ->end()
                         ->children()
@@ -94,6 +94,20 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('public')
                                 ->info('Make this client available as public service.')
                                 ->defaultValue(false)
+                            ->end()
+                            ->arrayNode('context')
+                                ->info('Context to pass to the connection.
+                                https://www.php.net/manual/en/context.socket.php')
+                                ->children()
+                                    ->arrayNode('ssl')
+                                        ->children()
+                                            ->scalarNode('local_cert')->end()
+                                            ->scalarNode('local_pk')->end()
+                                            ->scalarNode('passphrase')->end()
+                                            ->scalarNode('cafile')->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
                             ->end()
                         ->end()
                     ->end()

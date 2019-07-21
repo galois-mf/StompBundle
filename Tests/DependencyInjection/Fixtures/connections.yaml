@@ -18,3 +18,12 @@ stomp_php_stomp:
         user: 'username'
         password: '123456'
         public: true
+     broker_with_context:
+        public: true
+        broker_uri: 'tcp://localhost:61614'
+        context:
+            ssl:
+              local_cert: 'cert.pem'
+              local_pk: 'key.pem'
+              passphrase: 'test'
+              cafile: 'cert.ca'
